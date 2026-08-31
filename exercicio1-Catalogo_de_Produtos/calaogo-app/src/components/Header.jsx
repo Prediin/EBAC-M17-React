@@ -5,11 +5,11 @@ function Header() {
     return (
         <header className='header'>
             <Logo 
-            color='blue'
-            size={100}
+            size={150}
+            className='logo'
             />
-            <h1 className='header.title'>Catálogo de Produtos</h1>
-            <p className='hader.text'>Casas Corrente Piauí</p>
+            <h1 className='title'>Catálogo de Produtos</h1>
+            <p className='text'>Casas São Pedro</p>
         </header>
     )
 }

@@ -1,5 +1,4 @@
 function Logo({
-  color = "#000000",
   size = 220
 }) {
   return (
@@ -11,7 +10,7 @@ function Logo({
       aria-label="Logo CSB"
       style={{
         display: "block",
-        color
+        color: "#FAF8F5"
       }}
     >
       <g
