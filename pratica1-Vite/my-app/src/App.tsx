@@ -1,26 +1,56 @@
-import { useState } from "react";
-import Tarefa from "./components/Tarefa"
+import { useEffect, useState, type FormEvent } from "react";
+import Tarefa from "./components/Tarefa";
+
+const API_URL = "https://crudcrud.com/api/41456e5ea65d4e57ab2945d865b2e2b6/tarefas";
+
+type TarefaData = {
+  _id?: string;
+  texto: string;
+};
 
 function App() {
+  const [tarefas, setTarefas] = useState<TarefaData[]>([]);
+  const [novaTarefa, setNovaTarefa] = useState("");
 
-  const [tarefas, setTarefas] = useState([
-    {id: 1, texto: "Estudar React"}
-  ]);
-  const [novaTarefa, setNovaTarefa] = useState('');
+  useEffect(() => {
+    fetch(API_URL)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Erro ao buscar tarefas");
+        }
 
-  const handleSubmit = (e) => {
+        return res.json();
+      })
+      .then((dados) => setTarefas(dados))
+      .catch((error) => console.error("Erro ao buscar tarefas", error));
+  }, []);
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if(novaTarefa.trim() === '') return;
+    const texto = novaTarefa.trim();
+    if (texto === "") return;
 
-    const novoid = tarefas[tarefas.length - 1].id +1;
-    const nova = {
-      id: novoid,
-      texto: novaTarefa.trim()
-    }
-    setTarefas([...tarefas, nova]);
-    setNovaTarefa('');
-  }
+    const nova = { texto };
+
+    fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(nova),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Erro ao criar tarefa");
+        }
+
+        return res.json();
+      })
+      .then((tarefaCriada) => {
+        setTarefas((tarefasAtuais) => [...tarefasAtuais, tarefaCriada]);
+        setNovaTarefa("");
+      })
+      .catch((error) => console.error("Erro ao criar tarefa", error));
+  };
 
   return (
     <main>
@@ -33,7 +63,7 @@ function App() {
         <button type="submit">Adicionar</button>
       </form>
       <ul>
-        {tarefas.map(tarefa => <Tarefa key={tarefa.id} texto={tarefa.texto}/>)}
+        {tarefas.map(tarefa => <Tarefa key={tarefa._id} texto={tarefa.texto}/>)}
       </ul>
     </main>
   )
