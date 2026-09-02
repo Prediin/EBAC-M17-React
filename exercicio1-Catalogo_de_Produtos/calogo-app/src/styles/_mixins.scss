@@ -1,0 +1,12 @@
+@use 'variables' as *;
+@use 'variables';
+
+@mixin btn($cor, $fundo) {
+    font-weight: bold;
+    font-size: variables.$fonte-norm;
+    background: $fundo;
+    color: $cor;
+    padding: variables.$esp-padrao;
+    border-radius: variables.$esp-gran;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.285);
+}

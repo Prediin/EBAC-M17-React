@@ -1,0 +1,9 @@
+[
+  {
+    "id": "sofa-pequeno",
+    "nome": "Sofá pequeno",
+    "preco": 499.9,
+    "img": "/imgs/sofa-pequeno.webp",
+    "desc": "Sofá pequeno de dois lugares verde escuro"
+  }
+]

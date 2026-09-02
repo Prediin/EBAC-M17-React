@@ -1,0 +1,526 @@
+@use 'variables' as *;
+@use 'variables';
+@use 'mixins' as *;
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-width: 20rem;
+    overflow-x: hidden;
+    background: #f3eee8;
+    color: variables.$grafite-fechado;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+}
+
+button,
+input,
+textarea {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/*===CABEÇALHO===*/
+.header {
+    position: sticky;
+    z-index: 1000;
+    top: 0;
+    display: flex;
+    align-items: center;
+    min-height: 6.5rem;
+    padding: 0.8rem clamp(1rem, 4vw, 3rem);
+    background: rgba(43, 40, 37, 0.98);
+    box-shadow: 0 4px 18px rgba(43, 40, 37, 0.12);
+    color: variables.$creme-suave;
+
+    .logo {
+        width: 7rem;
+        height: auto;
+        flex-shrink: 0;
+    }
+
+    .text-box {
+        min-width: 0;
+        margin-left: variables.$esp-gran;
+    }
+
+    .title {
+        margin: 0;
+        font-size: clamp(1.35rem, 3vw, 2rem);
+        line-height: 1.15;
+    }
+
+    .text {
+        max-height: 1.5rem;
+        margin-top: 0.25rem;
+        overflow: hidden;
+        opacity: 1;
+    }
+
+    &--compacto {
+        min-height: 3.8rem;
+        padding-block: 0.35rem;
+        background: rgba(43, 40, 37, 0.78);
+        box-shadow: 0 6px 22px rgba(43, 40, 37, 0.22);
+        backdrop-filter: blur(12px);
+
+        .logo {
+            width: 4rem;
+        }
+
+        .title {
+            font-size: clamp(1.05rem, 2.5vw, 1.35rem);
+        }
+
+        .text {
+            max-height: 0;
+            margin-top: 0;
+            opacity: 0;
+        }
+    }
+}
+
+/*===FORMULÁRIO===*/
+.form-produto {
+    max-width: 62rem;
+    margin: 2rem auto;
+    padding: clamp(1.25rem, 4vw, 2.5rem);
+    background: variables.$creme-suave;
+    border: 1px solid rgba(110, 59, 41, 0.22);
+    border-top: 5px solid variables.$mogno-escuro;
+    border-radius: variables.$esp-padrao;
+    box-shadow: 0 18px 45px rgba(43, 40, 37, 0.12);
+
+    .form-cabecalho {
+        margin-bottom: 2rem;
+
+        p {
+            color: rgba(43, 40, 37, 0.72);
+            line-height: 1.5;
+        }
+    }
+
+    .form-etiqueta {
+        display: inline-block;
+        margin-bottom: variables.$esp-pequ;
+        color: variables.$verde-floresta;
+        font-size: variables.$fonte-pequ;
+        font-weight: bold;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    .titulo {
+        margin-bottom: variables.$esp-pequ;
+        color: variables.$grafite-fechado;
+        font-size: clamp(1.5rem, 4vw, 2rem);
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1.5rem;
+    }
+
+    .campo {
+        display: flex;
+        flex-direction: column;
+        gap: variables.$esp-pequ;
+        min-width: 0;
+
+        label {
+            font-size: variables.$fonte-norm;
+            font-weight: bold;
+        }
+
+        > input,
+        textarea,
+        .campo-preco {
+            width: 100%;
+            background: #fff;
+            border: 1px solid rgba(110, 59, 41, 0.35);
+            border-radius: variables.$esp-pequ;
+            color: variables.$grafite-fechado;
+            font: inherit;
+        }
+
+        > input,
+        textarea {
+            padding: 0.9rem 1rem;
+        }
+
+        > input:focus,
+        textarea:focus,
+        .campo-preco:focus-within {
+            border-color: variables.$verde-floresta;
+            box-shadow: 0 0 0 3px rgba(42, 77, 68, 0.14);
+            outline: none;
+        }
+
+        textarea {
+            min-height: 9.5rem;
+            resize: vertical;
+        }
+    }
+
+    .campo-preco {
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+
+        span {
+            align-self: stretch;
+            display: grid;
+            place-items: center;
+            padding: 0 1rem;
+            background: rgba(200, 138, 88, 0.16);
+            color: variables.$mogno-escuro;
+            font-weight: bold;
+        }
+
+        input {
+            min-width: 0;
+            width: 100%;
+            padding: 0.9rem 1rem;
+            border: 0;
+            outline: none;
+            font: inherit;
+        }
+    }
+
+    .upload-imagem {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 9.5rem;
+        padding: variables.$esp-padrao;
+        overflow: hidden;
+        background: rgba(200, 138, 88, 0.08);
+        border: 2px dashed rgba(110, 59, 41, 0.38);
+        border-radius: variables.$esp-pequ;
+        text-align: center;
+
+        &:hover,
+        &:focus-within {
+            background: rgba(200, 138, 88, 0.14);
+            border-color: variables.$verde-floresta;
+        }
+
+        img {
+            width: 100%;
+            height: 9rem;
+            margin-bottom: variables.$esp-padrao;
+            border-radius: variables.$esp-pequ;
+            object-fit: cover;
+        }
+    }
+
+    .upload-placeholder {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.25rem;
+        margin-bottom: variables.$esp-padrao;
+
+        small {
+            color: rgba(43, 40, 37, 0.65);
+        }
+    }
+
+    .upload-icone {
+        display: grid;
+        place-items: center;
+        width: 2.5rem;
+        height: 2.5rem;
+        margin-bottom: 0.25rem;
+        background: variables.$verde-floresta;
+        border-radius: 50%;
+        color: variables.$creme-suave;
+        font-size: 1.5rem;
+    }
+
+    .input-arquivo {
+        max-width: 100%;
+        color: rgba(43, 40, 37, 0.72);
+        font: inherit;
+
+        &::file-selector-button {
+            margin-right: variables.$esp-padrao;
+            padding: 0.7rem 1rem;
+            background: variables.$carvalho-quente;
+            border: 0;
+            border-radius: variables.$esp-pequ;
+            color: variables.$grafite-fechado;
+            cursor: pointer;
+            font-weight: bold;
+        }
+    }
+
+    .nome-arquivo,
+    .erro-imagem {
+        overflow-wrap: anywhere;
+        font-size: variables.$fonte-pequ;
+    }
+
+    .nome-arquivo {
+        color: variables.$verde-floresta;
+    }
+
+    .erro-imagem {
+        color: #a32d24;
+        font-weight: bold;
+    }
+
+    .form-acoes {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: variables.$esp-gran;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(110, 59, 41, 0.18);
+
+        > span {
+            color: rgba(43, 40, 37, 0.65);
+            font-size: variables.$fonte-pequ;
+        }
+    }
+
+    .btnAdicionar {
+        @include btn(variables.$verde-floresta, variables.$creme-suave);
+        padding: 0.9rem 1.4rem;
+        border: 0;
+        border-radius: variables.$esp-pequ;
+        box-shadow: 0 5px 14px rgba(42, 77, 68, 0.25);
+        cursor: pointer;
+        font-weight: bold;
+
+        &:hover {
+            box-shadow: 0 8px 20px rgba(42, 77, 68, 0.32);
+        }
+    }
+}
+
+/*===CATÁLOGO===*/
+.catalogo {
+    max-width: 72rem;
+    margin: 0 auto;
+}
+
+.catalogo-cabecalho {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: variables.$esp-gran;
+    padding: variables.$esp-gran 1.6rem 0;
+
+    h2 {
+        margin: 0.2rem 0;
+        font-size: clamp(1.5rem, 4vw, 2rem);
+    }
+
+    p {
+        color: rgba(43, 40, 37, 0.65);
+    }
+}
+
+.catalogo-etiqueta {
+    color: variables.$verde-floresta;
+    font-size: variables.$fonte-pequ;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.erro-armazenamento {
+    margin: variables.$esp-gran 1.6rem 0;
+    padding: variables.$esp-padrao;
+    background: #fff1ef;
+    border: 1px solid #d78178;
+    border-radius: variables.$esp-pequ;
+    color: #8c211b;
+}
+
+.produtos {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(0.8rem, 2vw, 1.25rem);
+    padding: variables.$esp-gran 1.6rem 3rem;
+}
+
+.prod-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    width: 100%;
+    overflow: hidden;
+    background: white;
+    border: 2px solid variables.$mogno-escuro;
+    border-radius: variables.$esp-padrao;
+    box-shadow: 0 8px 22px rgba(43, 40, 37, 0.1);
+
+    .img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+    }
+
+    .nome {
+        z-index: 2;
+        width: 100%;
+        padding: 0.7rem variables.$esp-pequ;
+        background: variables.$creme-suave;
+        font-size: variables.$fonte-gran;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .preco {
+        z-index: 1;
+        width: 100%;
+        padding: 0.7rem variables.$esp-pequ;
+        background: variables.$verde-floresta;
+        color: variables.$creme-suave;
+        font-size: variables.$fonte-norm;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .desc {
+        flex: 1;
+        width: 100%;
+        padding: 0.85rem;
+        background: white;
+        line-height: 1.45;
+        overflow-wrap: anywhere;
+        text-align: left;
+    }
+}
+
+/*===1536px===*/
+@media (min-width: 96rem) {
+    .catalogo {
+        max-width: 90rem;
+    }
+
+    .form-produto {
+        max-width: 72rem;
+    }
+
+    .produtos {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+}
+
+/*===1280px===*/
+@media (min-width: 80rem) and (max-width: 95.999rem) {
+    .catalogo {
+        max-width: 76rem;
+    }
+}
+
+/*===1024px===*/
+@media (max-width: 79.999rem) {
+    .form-produto {
+        margin-inline: variables.$esp-gran;
+    }
+}
+
+/*===768px===*/
+@media (max-width: 63.999rem) {
+    .produtos {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .form-produto {
+        padding: clamp(1.25rem, 3.5vw, 2rem);
+    }
+}
+
+@media (max-width: 47.999rem) {
+    .header {
+        min-height: 5rem;
+
+        .logo {
+            width: 5.5rem;
+        }
+
+        &--compacto {
+            min-height: 3.5rem;
+
+            .logo {
+                width: 3.5rem;
+            }
+        }
+    }
+
+    .form-produto {
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .form-acoes {
+            align-items: stretch;
+            flex-direction: column;
+        }
+
+        .btnAdicionar {
+            width: 100%;
+        }
+    }
+
+    .produtos {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/*===640px===*/
+@media (max-width: 39.999rem) {
+    .header {
+        padding-inline: 0.85rem;
+
+        .text-box {
+            margin-left: 0.7rem;
+        }
+    }
+
+    .form-produto {
+        margin: 1rem 0.75rem;
+        padding: 1.15rem;
+        border-radius: 0.7rem;
+
+        .form-cabecalho {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-grid {
+            gap: 1rem;
+        }
+
+        .input-arquivo {
+            font-size: 0.85rem;
+
+            &::file-selector-button {
+                display: block;
+                margin: 0 auto 0.65rem;
+            }
+        }
+    }
+
+    .catalogo-cabecalho {
+        padding-inline: 1rem;
+    }
+
+    .produtos {
+        grid-template-columns: minmax(0, 24rem);
+        justify-content: center;
+        padding: 1rem 0.75rem 2rem;
+    }
+}
