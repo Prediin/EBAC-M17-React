@@ -1,16 +1,13 @@
-import { useEffect, useState, type SubmitEvent } from "react";
+import { useEffect, useState } from "react";
 import Tarefa from './components/Tarefa';
+import { useInput } from "./hooks/useInput";
 
-const API_URL = "https://crudcrud.com/api/e517295826c143149794e26ffc40e9ef/tarefas";
-
-type TarefaData = {
-  _id?: string;
-  texto: string;
-};
+const API_URL = "https://crudcrud.com/api/0e7543a80c94419d9e1d67248241f226/tarefas";
 
 function App() {
-  const [tarefas, setTarefas] = useState<TarefaData[]>([]);
-  const [novaTarefa, setNovaTarefa] = useState("");
+
+  const [tarefas, setTarefas] = useState([]);
+  const tarefa = useInput();
 
   console.log('Componente App executado.');
 
@@ -31,14 +28,14 @@ function App() {
       .catch((error) => console.error("Erro ao buscar tarefas", error));
   }, []);
 
-  const handleSubmit = (e: SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    const texto = novaTarefa.trim();
-    if (texto === "") return;
+    const texto = tarefa.valor.trim();
+    if (texto === '') return;
 
+    //Evio da tarefa para API
     const nova = { texto };
-
     fetch(API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -53,7 +50,7 @@ function App() {
       })
       .then((tarefaCriada) => {
         setTarefas((tarefasAtuais) => [...tarefasAtuais, tarefaCriada]);
-        setNovaTarefa("");
+        tarefa.limpar();
       })
       .catch((error) => console.error("Erro ao criar tarefa", error));
   };
@@ -63,8 +60,8 @@ function App() {
       <h1>To-Do List App</h1>
       <form onSubmit={handleSubmit}>
         <input type="text" placeholder="Digite uma nova tarefa" 
-        value={novaTarefa}
-        onChange={(e) => setNovaTarefa(e.target.value)}
+        value={tarefa.valor}
+        onChange={tarefa.onChange}
         />
         <button type="submit">Adicionar</button>
       </form>
