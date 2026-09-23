@@ -1,7 +1,7 @@
-import { useEffect, useState, type FormEvent } from "react";
-import Tarefa from "./components/Tarefa";
+import { useEffect, useState, type SubmitEvent } from "react";
+import Tarefa from './components/Tarefa';
 
-const API_URL = "https://crudcrud.com/api/41456e5ea65d4e57ab2945d865b2e2b6/tarefas";
+const API_URL = "https://crudcrud.com/api/e517295826c143149794e26ffc40e9ef/tarefas";
 
 type TarefaData = {
   _id?: string;
@@ -11,6 +11,12 @@ type TarefaData = {
 function App() {
   const [tarefas, setTarefas] = useState<TarefaData[]>([]);
   const [novaTarefa, setNovaTarefa] = useState("");
+
+  console.log('Componente App executado.');
+
+  useEffect(() => {
+    console.log('Componente montado.')
+  }, []);
 
   useEffect(() => {
     fetch(API_URL)
@@ -25,7 +31,7 @@ function App() {
       .catch((error) => console.error("Erro ao buscar tarefas", error));
   }, []);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const texto = novaTarefa.trim();
