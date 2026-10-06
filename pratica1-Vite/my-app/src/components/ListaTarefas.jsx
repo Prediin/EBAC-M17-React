@@ -2,110 +2,102 @@ import { useContext, useEffect, useState } from "react";
 import Tarefa from './Tarefa';
 import { useInput } from "../hooks/useInput";
 import { UserContext } from "../context/UserContext.jsx";
+import styles from "./ListaTarefas.module.css";
 
-const API_URL = "https://crudcrud.com/api/1eeb8e5b138a4ced82e67e8b2c162611b/tarefas";
-const LOCAL_STORAGE_KEY = "tarefas";
+const STORAGE_KEY = "tarefasPorUsuario";
 
-function carregarTarefasLocais() {
+function obterTarefasSalvas() {
   try {
-    const tarefasSalvas = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || "[]");
-    return Array.isArray(tarefasSalvas) ? tarefasSalvas : [];
+    const tarefasSalvas = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+    return tarefasSalvas && typeof tarefasSalvas === "object" ? tarefasSalvas : {};
   } catch (error) {
-    console.error("Erro ao carregar tarefas locais", error);
-    return [];
+    console.error("Erro ao carregar tarefas salvas", error);
+    return {};
   }
 }
 
+function chaveDoUsuario(nome) {
+  return nome.trim().toLowerCase();
+}
+
+function carregarTarefasDoUsuario(nome) {
+  const tarefasPorUsuario = obterTarefasSalvas();
+  const tarefasDoUsuario = tarefasPorUsuario[chaveDoUsuario(nome)];
+  return Array.isArray(tarefasDoUsuario) ? tarefasDoUsuario : [];
+}
+
+function salvarTarefasDoUsuario(nome, tarefas) {
+  const tarefasPorUsuario = obterTarefasSalvas();
+  tarefasPorUsuario[chaveDoUsuario(nome)] = tarefas;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(tarefasPorUsuario));
+}
+
+function criarId() {
+  return crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`;
+}
+
 function ListaTarefas() {
-
-  const [tarefas, setTarefas] = useState([]);
-  const [apiDisponivel, setApiDisponivel] = useState(true);
+  const { usuario } = useContext(UserContext);
   const tarefa = useInput();
-  const {usuario} = useContext(UserContext);
-
-  console.log('Componente App executado.');
+  const [tarefas, setTarefas] = useState(() => carregarTarefasDoUsuario(usuario.nome));
 
   useEffect(() => {
-    console.log('Componente montado.')
-  }, []);
-
-  useEffect(() => {
-    fetch(API_URL)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Erro ao buscar tarefas");
-        }
-
-        return res.json();
-      })
-      .then((dados) => setTarefas(dados))
-      .catch((error) => {
-        console.warn("API indisponível; carregando tarefas locais.", error);
-        setApiDisponivel(false);
-        setTarefas(carregarTarefasLocais());
-      });
-  }, []);
-
-  const salvarTarefaLocal = (nova) => {
-    const tarefaCriada = { ...nova, _id: crypto.randomUUID() };
-    const tarefasAtualizadas = [...carregarTarefasLocais(), tarefaCriada];
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(tarefasAtualizadas));
-    setTarefas((tarefasAtuais) => [...tarefasAtuais, tarefaCriada]);
-    tarefa.limpar();
-  };
+    salvarTarefasDoUsuario(usuario.nome, tarefas);
+  }, [usuario.nome, tarefas]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const texto = tarefa.valor.trim();
-    if (texto === '') return;
+    if (!texto) return;
 
-    //Evio da tarefa para API
-    const nova = { usuario: usuario.nome, texto};
-    if (!apiDisponivel) {
-      salvarTarefaLocal(nova);
-      return;
-    }
+    const novaTarefa = {
+      id: criarId(),
+      usuario: usuario.nome,
+      texto,
+      concluida: false,
+    };
 
-    fetch(API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(nova),
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Erro ao criar tarefa");
-        }
+    setTarefas((tarefasAtuais) => [...tarefasAtuais, novaTarefa]);
+    tarefa.limpar();
+  };
 
-        return res.json();
-      })
-      .then((tarefaCriada) => {
-        setTarefas((tarefasAtuais) => [...tarefasAtuais, tarefaCriada]);
-        tarefa.limpar();
-      })
-      .catch((error) => {
-        console.warn("API indisponível; salvando tarefa localmente.", error);
-        setApiDisponivel(false);
-        salvarTarefaLocal(nova);
-      });
+  const alternarTarefa = (id) => {
+    setTarefas((tarefasAtuais) => tarefasAtuais.map((item) =>
+      item.id === id ? { ...item, concluida: !item.concluida } : item
+    ));
+  };
+
+  const removerTarefa = (id) => {
+    setTarefas((tarefasAtuais) => tarefasAtuais.filter((item) => item.id !== id));
   };
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
-        <input type="text" placeholder="Digite uma nova tarefa" 
-        value={tarefa.valor}
-        onChange={tarefa.onChange}
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <input
+          type="text"
+          placeholder="Digite uma nova tarefa"
+          value={tarefa.valor}
+          onChange={tarefa.onChange}
+          className={styles.input}
         />
-        <button type="submit">Adicionar</button>
+        <button type="submit" className={styles.button}>Adicionar</button>
       </form>
-      <ul>
-        {tarefas
-            .filter(tarefa => tarefa.usuario === usuario.nome)
-        .map(tarefa => <Tarefa key={tarefa._id} texto={tarefa.texto}/>)}
+
+      <ul className={styles.ul}>
+        {tarefas.map((item) => (
+          <Tarefa
+            key={item.id}
+            texto={item.texto}
+            concluida={item.concluida}
+            onAlternar={() => alternarTarefa(item.id)}
+            onRemover={() => removerTarefa(item.id)}
+          />
+        ))}
       </ul>
     </>
-  )
+  );
 }
 
-export default ListaTarefas
+export default ListaTarefas;

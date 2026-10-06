@@ -1,0 +1,77 @@
+/* Módulo: ListaTarefas.jsx */
+
+/* Formulário de nova tarefa */
+.form {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  margin-bottom: 6px;
+}
+
+/* Lista sem marcadores */
+.ul {
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Campo de texto */
+.input {
+  min-width: 0;
+  flex: 1;
+  height: 40px;
+  padding: 0 13px;
+  border: 1px solid #dbe3ef;
+  border-radius: 10px;
+  background: #fff;
+  color: #172033;
+  font-size: 13px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Foco do campo */
+.input:focus {
+  outline: none;
+  border-color: #6875f5;
+  box-shadow: 0 0 0 4px rgba(104, 117, 245, 0.14);
+}
+
+/* Botão de adicionar */
+.button {
+  height: 40px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 10px;
+  background: #6875f5;
+  color: #fff;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  transition: background 0.2s ease, transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* Efeito ao passar o mouse */
+.button:hover {
+  background: #5361e8;
+  box-shadow: 0 6px 14px rgba(104, 117, 245, 0.25);
+  transform: translateY(-1px);
+}
+
+/* Ajuste para telas pequenas */
+@media (max-width: 420px) {
+  .form {
+    gap: 6px;
+  }
+}
+
+/* Empilha o formulário em telas muito estreitas */
+@media (max-width: 340px) {
+  .form {
+    flex-direction: column;
+  }
+
+  .form .button {
+    width: 100%;
+  }
+}

@@ -3,6 +3,7 @@ import Tarefa from './components/Tarefa';
 import ListaTarefas from './components/ListaTarefas';
 import Login from './components/Login.jsx';
 import { UserContext } from './context/UserContext.jsx'
+import styles from './App.module.css';
 
 function App() {
 
@@ -10,8 +11,8 @@ function App() {
 
   return (
     <UserContext.Provider value={{ usuario, setUsuario }}>
-      <main>
-        <h1>{usuario.nome}'s List App</h1>
+      <main className={styles.main}>
+        <h1 className={styles.title}>{usuario.nome}'s List App</h1>
         {usuario.estaLogado ? <ListaTarefas/> : <Login/>}
       </main>
     </UserContext.Provider>

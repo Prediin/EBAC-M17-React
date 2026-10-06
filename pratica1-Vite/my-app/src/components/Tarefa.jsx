@@ -1,22 +1,22 @@
-import { memo, useEffect, useState } from "react";
-import './Tarefa.css';
+import { memo } from "react";
+import styles from "./Tarefa.module.css";
 
-function Tarefa({ texto }) {
-    const [concluida, setConcluida] = useState(false);
-
-    useEffect(() => {
-        console.log("Componente montado.", texto);
-    }, []);
-
-    console.log("Componente App executado.", texto);
-
-    const alternarConcluida = () => {
-        setConcluida(!concluida);
-    };
-
-    return (
-        <li><input type="checkbox" onChange={alternarConcluida}/> <span className={concluida ? 'concluida' : ''}>{texto}</span> <button>Remover</button></li>
-    );
+function Tarefa({ texto, concluida, onAlternar, onRemover }) {
+  return (
+    <li className={styles.li}>
+      <input
+        type="checkbox"
+        checked={concluida}
+        onChange={onAlternar}
+        className={styles.checkbox}
+        aria-label={`Marcar tarefa ${texto} como concluída`}
+      />
+      <span className={concluida ? styles.concluida : ""}>{texto}</span>
+      <button type="button" onClick={onRemover} className={styles.button}>
+        Remover
+      </button>
+    </li>
+  );
 }
 
 export default memo(Tarefa);

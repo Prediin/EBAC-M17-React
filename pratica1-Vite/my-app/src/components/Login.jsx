@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { useInput } from "../hooks/useInput";
 import { UserContext } from "../context/UserContext";
+import styles from "./Login.module.css"
 
 
 function Login() {
@@ -15,12 +16,13 @@ function Login() {
     }
 
     return (
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleLogin} className={styles.form}>
             <input type="text"
             placeholder="Digite seu nome"
             value={nomeDoUsuario.valor}
-            onChange={nomeDoUsuario.onChange}/>
-            <button type="submit">Entrar</button>
+            onChange={nomeDoUsuario.onChange}
+            className={styles.input}/>
+            <button type="submit" className={styles.button}>Entrar</button>
         </form>
     );
 }
